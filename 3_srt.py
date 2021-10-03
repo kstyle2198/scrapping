@@ -17,8 +17,8 @@ driver = webdriver.Chrome(executable_path="./chromedriver/chromedriver.exe")
 time.sleep(1)
 
 ## 열차표 예매 조건 설정
-srt_id = srt_id
-pw = pw
+srt_id = "1886866603"
+pw = "0710kjb2198"
 date = "23"
 
 ## SRT 홈피가서 로그인후 승차권 예매화면으로 이동
