@@ -15,20 +15,17 @@ from slack import *
 today = datetime.datetime.today().date()
 기준일 = datetime.date(2021, 10, 3)
 gap = today - 기준일
-# print(gap.days)
-today_num = 3255 + gap.days + 1
-# print(today_num)
+today_num = 3254 + gap.days * 2
 Slack_Msg("==================")
 Slack_Msg("==================")
 Slack_Msg("==================")
-for i in range(5):
+
+for i in range(1):
 
     time.sleep(1)
     today_num -= i * 2
-    print(today_num)
     url = 'https://audioclip.naver.com/channels/164/clips/{0}'.format(
         str(today_num))
-    # print(url)
     driver = webdriver.Chrome(
         executable_path="./chromedriver/chromedriver.exe")
     time.sleep(1)
