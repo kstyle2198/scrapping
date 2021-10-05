@@ -16,9 +16,11 @@ today = datetime.datetime.today().date()
 기준일 = datetime.date(2021, 10, 3)
 gap = today - 기준일
 # print(gap.days)
-today_num = 3255 + gap.days
+today_num = 3255 + gap.days + 1
 # print(today_num)
-
+Slack_Msg("==================")
+Slack_Msg("==================")
+Slack_Msg("==================")
 for i in range(5):
 
     time.sleep(1)
