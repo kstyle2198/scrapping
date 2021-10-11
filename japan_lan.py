@@ -20,7 +20,7 @@ Slack_Msg("==================")
 Slack_Msg("==================")
 Slack_Msg("==================")
 
-for i in range(1):
+for i in range(5):
 
     time.sleep(1)
     today_num -= i * 2
