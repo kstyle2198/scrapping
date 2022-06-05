@@ -5,7 +5,8 @@ from selenium.webdriver.chrome.options import Options
 import time
 import datetime
 from slack import *
-from secret import *
+from config import get_secret
+
 
 print("KTX 예매 시도를 합니다.")
 driver = webdriver.Chrome(executable_path="./chromedriver/chromedriver.exe")
@@ -13,13 +14,13 @@ driver = webdriver.Chrome(executable_path="./chromedriver/chromedriver.exe")
 time.sleep(3)
 ## 코레일 열차표 예매 조건 설정
 
-ktx_id = ktx_id
-pw = pw
+ktx_id = get_secret("ktx_id")
+pw = get_secret("pw")
 depart = "익산"
 arrive = "용산"
-month = "9"
-date = "24"
-booking_time = "15"
+month = "2"
+date = "3"
+booking_time = "9"
 
 ## 코레일 홈피가서 로그인후 승차권 예매화면으로 이동
 url = 'http://www.letskorail.com/'

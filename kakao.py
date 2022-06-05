@@ -1,5 +1,7 @@
 import requests
 import json
+from config import get_secret
+
 
 
 def sendToMeMessage(text):
@@ -20,7 +22,7 @@ def sendToMeMessage(text):
 
 
 text = "안녕하세요."
-KAKAO_TOKEN = "CcWBhl0Ox3-06g_0O-AGHuGA275A9Z69BHRIEwo9c00AAAF8ROKnng"
+KAKAO_TOKEN = get_secret("KAKAO_TOKEN")
 
 result = sendToMeMessage(text)
 print(result.text)

@@ -1,7 +1,7 @@
 # 파이썬에서 슬랙으로 텍스트 메시지 보내기 입니다.
 import requests
 import json
-# from secret import *
+from config import get_secret
 
 
 class Slack_Msg():
@@ -10,7 +10,7 @@ class Slack_Msg():
         self.sendmsg()
 
     def sendmsg(self):
-        web_hook_url = "https://hooks.slack.com/services/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"
+        web_hook_url = get_secret("web_hook_url")
         sendmsg = self.msg
         slack_msg = {'text': sendmsg}
         requests.post(web_hook_url, data=json.dumps(slack_msg))

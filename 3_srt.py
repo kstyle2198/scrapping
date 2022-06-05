@@ -8,7 +8,8 @@ import requests
 import time
 import datetime
 from slack import *
-from secret import *
+from config import get_secret
+
 
 print("SRT 예매 시도를 합니다.")
 driver = webdriver.Chrome(executable_path="./chromedriver/chromedriver.exe")
@@ -17,9 +18,9 @@ driver = webdriver.Chrome(executable_path="./chromedriver/chromedriver.exe")
 time.sleep(1)
 
 ## 열차표 예매 조건 설정
-srt_id = "1886866603"
-pw = "0710kjb2198"
-date = "23"
+srt_id = get_secret("srt_id")
+pw = get_secret("pw")
+date = "6"
 
 ## SRT 홈피가서 로그인후 승차권 예매화면으로 이동
 url = 'https://etk.srail.kr/main.do'
@@ -70,7 +71,7 @@ driver.switch_to.window(driver.window_handles[0])  # 기본 창 선택 활성화
 
 print("출발역과 도착역 선택")
 
-익산 = '//*[@id="dptRsStnCd"]/option[14]'
+익산 = '//*[@id="dptRsStnCd"]/option[15]'
 수서 = '//*[@id="arvRsStnCd"]/option[2]'
 울산 = '//*[@id="dptRsStnCd"]/option[12]'
 
@@ -87,23 +88,31 @@ time.sleep(1)
 driver.switch_to.frame('_LAYER_BODY_')  # Inner HTML Iframe 이동 (달력 창)
 time.sleep(1)
 driver.find_element_by_link_text(date).click()  # 예매 날짜 설정
-time.sleep(0.5)
+time.sleep(2)
+
+print("간편 조회버튼 클릭")
+driver.switch_to.window(driver.window_handles[0])  # 기본 창 선택 활성화
+
 driver.find_element_by_xpath(
     '//*[@id="search-form"]/fieldset/a').click()  # 간편조회하기 버튼
 time.sleep(2)
 
-# driver.find_element_by_xpath(
-#     '//*[@id="result-form"]/fieldset/div[8]/input').click()  #다음화면(2페이지) 이동하기(14시경 이후)
-# time.sleep(2)
+print("2페이지 이동")
+driver.find_element_by_xpath('//*[@id="result-form"]/fieldset/div[8]/input'
+                             ).click()  #다음화면(2페이지) 이동하기(14시경 이후)
 
-for i in range(1, 100):
+time.sleep(2)
+
+print("예매 루프 실행")
+
+for i in range(1, 1000):
     print("{}번째 예약 시도".format(i))
     target1 = driver.find_element_by_xpath(
-        '//*[@id="result-form"]/fieldset/div[6]/table/tbody/tr[6]/td[7]/a'
+        '//*[@id="result-form"]/fieldset/div[6]/table/tbody/tr[5]/td[7]/a'
     )  # 19:10 열차
     print("1순위 현재 상태 : {}".format(target1.text))
     target2 = driver.find_element_by_xpath(
-        '//*[@id="result-form"]/fieldset/div[6]/table/tbody/tr[7]/td[7]/a'
+        '//*[@id="result-form"]/fieldset/div[6]/table/tbody/tr[6]/td[7]/a'
     )  # 19:40 열차
     print("2순위 현재 상태 : {}".format(target2.text))
 
@@ -122,7 +131,7 @@ for i in range(1, 100):
         # Slack_Msg("매진 상태입니다. 시간 : {0}".format(datetime.datetime.now()))
         print("리프레쉬 시작")
         driver.refresh()
-        time.sleep(5)
+        time.sleep(1)
         print("리프레쉬 종료")
         print("=" * 20)
 
