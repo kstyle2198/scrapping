@@ -20,7 +20,7 @@ time.sleep(1)
 ## 열차표 예매 조건 설정
 srt_id = get_secret("srt_id")
 pw = get_secret("pw")
-date = "6"
+date = "19"
 
 ## SRT 홈피가서 로그인후 승차권 예매화면으로 이동
 url = 'https://etk.srail.kr/main.do'
@@ -121,11 +121,11 @@ for i in range(1, 1000):
         print("1순위 예약하였습니다. 시간 : {0}".format(datetime.datetime.now()))
         Slack_Msg("1순위 예약에 성공하였습니다. 시간 : {0}".format(datetime.datetime.now()))
         break
-    elif target2.text == "예약하기":
-        target2.click()
-        print("2순위 예약하였습니다. 시간 : {0}".format(datetime.datetime.now()))
-        Slack_Msg("2순위 예약에 성공하였습니다. 시간 : {0}".format(datetime.datetime.now()))
-        break
+    # elif target2.text == "예약하기":
+    #     target2.click()
+    #     print("2순위 예약하였습니다. 시간 : {0}".format(datetime.datetime.now()))
+    #     Slack_Msg("2순위 예약에 성공하였습니다. 시간 : {0}".format(datetime.datetime.now()))
+    #     break
     else:
         print("매진 상태입니다. 시간 : {0}".format(datetime.datetime.now()))
         # Slack_Msg("매진 상태입니다. 시간 : {0}".format(datetime.datetime.now()))
