@@ -20,7 +20,7 @@ time.sleep(1)
 ## 열차표 예매 조건 설정
 srt_id = get_secret("srt_id")
 pw = get_secret("pw")
-date = "19"
+date = "09"
 
 ## SRT 홈피가서 로그인후 승차권 예매화면으로 이동
 url = 'https://etk.srail.kr/main.do'
@@ -30,6 +30,9 @@ time.sleep(2)
 # 팝업창 닫기
 print("총 윈도우 개수 {0}".format(len(driver.window_handles)))
 pop_up = len(driver.window_handles)
+
+def nextMove(path):
+    return driver.find_element('xpath', path)
 
 for i in range(pop_up - 1):
     print("{0}번째 팝업창 닫기".format(i + 1))
@@ -41,7 +44,9 @@ for i in range(pop_up - 1):
 
 time.sleep(1)
 driver.switch_to.window(driver.window_handles[0])  # 기본 창 선택 활성화
-driver.find_element_by_xpath('//*[@id="wrap"]/div[3]/div[1]/div/a[2]').click()
+nextMove('//*[@id="wrap"]/div[3]/div[1]/div/a[2]').click()
+# driver.find_element("xpath",'//*[@id="wrap"]/div[3]/div[1]/div/a[2]').click()
+# driver.find_element_by_xpath('//*[@id="wrap"]/div[3]/div[1]/div/a[2]').click()
 time.sleep(1)
 
 # 로그인
