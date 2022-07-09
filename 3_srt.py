@@ -20,7 +20,7 @@ time.sleep(1)
 ## 열차표 예매 조건 설정
 srt_id = get_secret("srt_id")
 pw = get_secret("pw")
-date = "09"
+date = "10"
 
 ## SRT 홈피가서 로그인후 승차권 예매화면으로 이동
 url = 'https://etk.srail.kr/main.do'
@@ -31,8 +31,11 @@ time.sleep(2)
 print("총 윈도우 개수 {0}".format(len(driver.window_handles)))
 pop_up = len(driver.window_handles)
 
-def nextMove(path):
+def nextXpath(path):
     return driver.find_element('xpath', path)
+
+def nextLinkText(path):
+    return driver.find_element('link text', path)
 
 for i in range(pop_up - 1):
     print("{0}번째 팝업창 닫기".format(i + 1))
@@ -44,18 +47,18 @@ for i in range(pop_up - 1):
 
 time.sleep(1)
 driver.switch_to.window(driver.window_handles[0])  # 기본 창 선택 활성화
-nextMove('//*[@id="wrap"]/div[3]/div[1]/div/a[2]').click()
+nextXpath('//*[@id="wrap"]/div[3]/div[1]/div/a[2]').click()
 # driver.find_element("xpath",'//*[@id="wrap"]/div[3]/div[1]/div/a[2]').click()
-# driver.find_element_by_xpath('//*[@id="wrap"]/div[3]/div[1]/div/a[2]').click()
+# nextMove('//*[@id="wrap"]/div[3]/div[1]/div/a[2]').click()
 time.sleep(1)
 
 # 로그인
 print("로그인 시작")
-driver.find_element_by_xpath('//*[@id="srchDvNm01"]').send_keys(srt_id)
-driver.find_element_by_xpath(
+nextXpath('//*[@id="srchDvNm01"]').send_keys(srt_id)
+nextXpath(
     '/html/body/div[1]/div[4]/div/div[2]/form/fieldset/div[1]/div[1]/div[2]/div/div[1]/div[2]/input'
 ).send_keys(pw)
-driver.find_element_by_xpath(
+nextXpath(
     '//*[@id="login-form"]/fieldset/div[1]/div[1]/div[2]/div/div[2]/input'
 ).click()
 time.sleep(1)
@@ -80,30 +83,31 @@ print("출발역과 도착역 선택")
 수서 = '//*[@id="arvRsStnCd"]/option[2]'
 울산 = '//*[@id="dptRsStnCd"]/option[12]'
 
-driver.find_element_by_xpath('//*[@id="dptRsStnCd"]').click()  #출발지 선택 버튼
-driver.find_element_by_xpath(익산).click()  #출발지 선택
+nextXpath('//*[@id="dptRsStnCd"]').click()  #출발지 선택 버튼
+nextXpath(익산).click()  #출발지 선택
 
-driver.find_element_by_xpath('//*[@id="arvRsStnCd"]').click()  #도착지 선택 버튼
-driver.find_element_by_xpath(수서).click()  #도착지 선택
+nextXpath('//*[@id="arvRsStnCd"]').click()  #도착지 선택 버튼
+nextXpath(수서).click()  #도착지 선택
 
 print("달력 및 날짜 선택")
-driver.find_element_by_xpath(
+nextXpath(
     '//*[@id="search-form"]/fieldset/div[3]/div/input[2]').click()  #달력버튼 클릭
 time.sleep(1)
 driver.switch_to.frame('_LAYER_BODY_')  # Inner HTML Iframe 이동 (달력 창)
 time.sleep(1)
-driver.find_element_by_link_text(date).click()  # 예매 날짜 설정
+nextLinkText(date).click()
+# driver.find_element_by_link_text(date).click()  # 예매 날짜 설정
 time.sleep(2)
 
 print("간편 조회버튼 클릭")
 driver.switch_to.window(driver.window_handles[0])  # 기본 창 선택 활성화
 
-driver.find_element_by_xpath(
+nextXpath(
     '//*[@id="search-form"]/fieldset/a').click()  # 간편조회하기 버튼
 time.sleep(2)
 
 print("2페이지 이동")
-driver.find_element_by_xpath('//*[@id="result-form"]/fieldset/div[8]/input'
+nextXpath('//*[@id="result-form"]/fieldset/div[8]/input'
                              ).click()  #다음화면(2페이지) 이동하기(14시경 이후)
 
 time.sleep(2)
@@ -112,11 +116,11 @@ print("예매 루프 실행")
 
 for i in range(1, 1000):
     print("{}번째 예약 시도".format(i))
-    target1 = driver.find_element_by_xpath(
+    target1 = nextXpath(
         '//*[@id="result-form"]/fieldset/div[6]/table/tbody/tr[5]/td[7]/a'
     )  # 19:10 열차
     print("1순위 현재 상태 : {}".format(target1.text))
-    target2 = driver.find_element_by_xpath(
+    target2 = nextXpath(
         '//*[@id="result-form"]/fieldset/div[6]/table/tbody/tr[6]/td[7]/a'
     )  # 19:40 열차
     print("2순위 현재 상태 : {}".format(target2.text))
