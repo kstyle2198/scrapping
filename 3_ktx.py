@@ -16,11 +16,11 @@ time.sleep(3)
 
 ktx_id = get_secret("ktx_id")
 pw = get_secret("pw")
-depart = "익산"
+depart = "익산 "
 arrive = "용산"
-month = "2"
-date = "3"
-booking_time = "9"
+month = "8"
+date = "15"
+booking_time = "17"
 
 
 def nextXpath(path):
@@ -30,13 +30,19 @@ def nextLinkText(path):
     return driver.find_element('link text', path)
 
 ## 코레일 홈피가서 로그인후 승차권 예매화면으로 이동
-url = 'http://www.letskorail.com/'
+# url = 'http://www.letskorail.com/'
+url = "https://www.letskorail.com/index.jsp"
 driver.get(url)
 time.sleep(2)
+
+# nextXpath('//*[@id="btnCommissionAgree"]').click()  # 추석명절용 임시팝업창 닫기
+# time.sleep(2)
+# nextXpath('//*[@id="container"]/div/div[2]/div[2]/a').click()
 
 # 팝업창 닫기
 print("총 윈도우 개수 {0}".format(len(driver.window_handles)))
 pop_up = len(driver.window_handles)
+
 
 for i in range(pop_up - 1):
     print("{0}번째 팝업창 닫기".format(i + 1))
@@ -112,8 +118,8 @@ target2 = '//*[@id="tableResult"]/tbody/tr[2]/td[6]/a[1]/img'
 target3 = '//*[@id="tableResult"]/tbody/tr[3]/td[6]/a[1]/img'
 target4 = '//*[@id="tableResult"]/tbody/tr[4]/td[6]/a[1]/img'
 
-for i in range(1, 5):
-    ## try & except로 순차적으로 4회 예약 시도
+for i in range(1, 100):
+    ## try & except로 순차적으로 100회 예약 시도
     print("{}차 시도".format(i))
     try:
         print("target1 예매 시도")
