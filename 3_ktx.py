@@ -22,6 +22,13 @@ month = "2"
 date = "3"
 booking_time = "9"
 
+
+def nextXpath(path):
+    return driver.find_element('xpath', path)
+
+def nextLinkText(path):
+    return driver.find_element('link text', path)
+
 ## 코레일 홈피가서 로그인후 승차권 예매화면으로 이동
 url = 'http://www.letskorail.com/'
 driver.get(url)
@@ -41,16 +48,16 @@ for i in range(pop_up - 1):
 
 time.sleep(1)
 driver.switch_to.window(driver.window_handles[0])  # 기본 창 선택 활성화
-driver.find_element_by_xpath(
+nextXpath(
     '//*[@id="header"]/div[1]/div/ul/li[2]/a/img').click()
 time.sleep(1)
 
 print("로그인 시작")
-driver.find_element_by_xpath('//*[@id="txtMember"]').send_keys(ktx_id)
-driver.find_element_by_xpath(
+nextXpath('//*[@id="txtMember"]').send_keys(ktx_id)
+nextXpath(
     '/html/body/div[1]/div[3]/div/div[1]/div[2]/div[1]/div[1]/form[1]/fieldset/div[1]/ul/li[2]/input'
 ).send_keys(pw)
-driver.find_element_by_xpath('//*[@id="loginDisplay1"]/ul/li[3]/a/img').click()
+nextXpath('//*[@id="loginDisplay1"]/ul/li[3]/a/img').click()
 time.sleep(5)
 
 print("로그인 종료후 팝업창 닫기")
@@ -67,7 +74,7 @@ for i in range(pop_up2 - 1):
 
 time.sleep(1)
 driver.switch_to.window(driver.window_handles[0])  # 기본 창 선택 활성화
-driver.find_element_by_xpath(
+nextXpath(
     '//*[@id="header"]/div[3]/div[1]/h3/a/img').click()
 time.sleep(1)
 
@@ -75,26 +82,26 @@ print("승차권 조회후 예약 시도")
 time.sleep(2)
 
 ## 예약 조건 입력
-driver.find_element_by_xpath(
+nextXpath(
     '//*[@id="selGoTrainRa00"]').click()  # 조회대상 열차 종류 KTX/SRT 온리
-driver.find_element_by_xpath('//*[@id="start"]').send_keys(
+nextXpath('//*[@id="start"]').send_keys(
     Keys.BACKSPACE)  # 서울 기본값 지우기
-driver.find_element_by_xpath('//*[@id="start"]').send_keys(
+nextXpath('//*[@id="start"]').send_keys(
     Keys.BACKSPACE)  # 서울 기본값 지우기
-driver.find_element_by_xpath('//*[@id="start"]').send_keys(depart)
-driver.find_element_by_xpath('//*[@id="get"]').send_keys(
+nextXpath('//*[@id="start"]').send_keys(depart)
+nextXpath('//*[@id="get"]').send_keys(
     Keys.BACKSPACE)  # 부산 기본값 지우기
-driver.find_element_by_xpath('//*[@id="get"]').send_keys(
+nextXpath('//*[@id="get"]').send_keys(
     Keys.BACKSPACE)  # 부산 기본값 지우기
-driver.find_element_by_xpath('//*[@id="get"]').send_keys(arrive)
+nextXpath('//*[@id="get"]').send_keys(arrive)
 time.sleep(0.5)
-driver.find_element_by_xpath('//*[@id="s_month"]').send_keys(month)
+nextXpath('//*[@id="s_month"]').send_keys(month)
 time.sleep(0.5)
-driver.find_element_by_xpath('//*[@id="s_day"]').send_keys(date)
+nextXpath('//*[@id="s_day"]').send_keys(date)
 time.sleep(0.5)
-driver.find_element_by_xpath('//*[@id="s_hour"]').send_keys(booking_time)
+nextXpath('//*[@id="s_hour"]').send_keys(booking_time)
 time.sleep(0.5)
-driver.find_element_by_xpath('//*[@id="center"]/form/div/p/a/img').click()
+nextXpath('//*[@id="center"]/form/div/p/a/img').click()
 
 ## 조회후 열차 예매
 print("일반실 예약시도")
@@ -110,39 +117,39 @@ for i in range(1, 5):
     print("{}차 시도".format(i))
     try:
         print("target1 예매 시도")
-        driver.find_element_by_xpath(target1).click()
+        nextXpath(target1).click()
         Slack_Msg("승차권이 예약되었습니다. 시간 : {0}".format(
             datetime.datetime.now()))  # 예약 성공시 slack 문자 발송
-        driver.find_element_by_xpath(target1).send_keys(Keys.ENTER)
+        nextXpath(target1).send_keys(Keys.ENTER)
         print("target1 예매 성공")
         sys.exit(1)
 
     except:
         try:
             print("target2 예매 시도")
-            driver.find_element_by_xpath(target2).click()
+            nextXpath(target2).click()
             Slack_Msg("승차권이 예약되었습니다. 시간 : {0}".format(datetime.datetime.now()))
-            driver.find_element_by_xpath(target2).send_keys(Keys.ENTER)
+            nextXpath(target2).send_keys(Keys.ENTER)
             print("target2 예매 성공")
             sys.exit(1)
 
         except:
             try:
                 print("target3 예매 시도")
-                driver.find_element_by_xpath(target3).click()
+                nextXpath(target3).click()
                 Slack_Msg("승차권이 예약되었습니다. 시간 : {0}".format(
                     datetime.datetime.now()))
-                driver.find_element_by_xpath(target3).send_keys(Keys.ENTER)
+                nextXpath(target3).send_keys(Keys.ENTER)
                 print("target3 예매 성공")
                 sys.exit(1)
 
             except:
                 try:
                     print("target4 예매 시도")
-                    driver.find_element_by_xpath(target4).click()
+                    nextXpath(target4).click()
                     Slack_Msg("승차권이 예약되었습니다. 시간 : {0}".format(
                         datetime.datetime.now()))
-                    driver.find_element_by_xpath(target4).send_keys(Keys.ENTER)
+                    nextXpath(target4).send_keys(Keys.ENTER)
                     print("target4 예매 성공")
                     sys.exit(1)
 
