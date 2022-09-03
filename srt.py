@@ -11,6 +11,13 @@ from slack import *
 from config import get_secret
 
 
+def nextXpath(path):
+    return driver.find_element('xpath', path)
+
+def nextLinkText(path):
+    return driver.find_element('link text', path)
+
+
 print("SRT 예매 시도를 합니다.")
 driver = webdriver.Chrome(executable_path="./chromedriver/chromedriver.exe")
 
@@ -20,7 +27,22 @@ time.sleep(1)
 ## 열차표 예매 조건 설정
 srt_id = get_secret("srt_id")
 pw = get_secret("pw")
-date = "15"
+
+# 도시 선택 옵션 번호
+수서 = 'option[2]'
+천안아산 = 'option[5]'
+오송 = 'option[6]'
+익산 = 'option[15]'
+목포 = 'option[19]'
+대전 = 'option[7]'
+동대구 = 'option[10]'
+신경주 = 'option[11]'
+울산 = 'option[12]'
+부산 = 'option[13]'
+
+date = "8"
+출발역 = 수서
+도착역 = 익산
 
 ## SRT 홈피가서 로그인후 승차권 예매화면으로 이동
 url = 'https://etk.srail.kr/main.do'
@@ -30,12 +52,6 @@ time.sleep(2)
 # 팝업창 닫기
 print("총 윈도우 개수 {0}".format(len(driver.window_handles)))
 pop_up = len(driver.window_handles)
-
-def nextXpath(path):
-    return driver.find_element('xpath', path)
-
-def nextLinkText(path):
-    return driver.find_element('link text', path)
 
 for i in range(pop_up - 1):
     print("{0}번째 팝업창 닫기".format(i + 1))
@@ -47,7 +63,7 @@ for i in range(pop_up - 1):
 
 time.sleep(1)
 driver.switch_to.window(driver.window_handles[0])  # 기본 창 선택 활성화
-driver.find_element_by_xpath('//*[@id="wrap"]/div[3]/div[1]/div/a[2]').click()
+nextXpath('//*[@id="wrap"]/div[3]/div[1]/div/a[2]').click()
 # driver.find_element("xpath",'//*[@id="wrap"]/div[3]/div[1]/div/a[2]').click()
 # nextMove('//*[@id="wrap"]/div[3]/div[1]/div/a[2]').click()
 time.sleep(1)
@@ -79,15 +95,14 @@ driver.switch_to.window(driver.window_handles[0])  # 기본 창 선택 활성화
 
 print("출발역과 도착역 선택")
 
-익산 = '//*[@id="dptRsStnCd"]/option[15]'
-수서 = '//*[@id="arvRsStnCd"]/option[2]'
-울산 = '//*[@id="dptRsStnCd"]/option[12]'
+출발지 = '//*[@id="dptRsStnCd"]/'+출발역
+도착지 = '//*[@id="arvRsStnCd"]/'+도착역
 
 nextXpath('//*[@id="dptRsStnCd"]').click()  #출발지 선택 버튼
-nextXpath(익산).click()  #출발지 선택
+nextXpath(출발지).click()  #출발지 선택
 
 nextXpath('//*[@id="arvRsStnCd"]').click()  #도착지 선택 버튼
-nextXpath(수서).click()  #도착지 선택
+nextXpath(도착지).click()  #도착지 선택
 
 print("달력 및 날짜 선택")
 nextXpath(
@@ -117,12 +132,15 @@ print("예매 루프 실행")
 for i in range(1, 1000):
     print("{}번째 예약 시도".format(i))
     target1 = nextXpath(
-        '//*[@id="result-form"]/fieldset/div[6]/table/tbody/tr[5]/td[7]/a'
-    )  # 19:10 열차
+        '//*[@id="result-form"]/fieldset/div[6]/table/tbody/tr[1]/td[7]/a'
+    )  # 17:58 열차
+    # target1 = nextXpath(
+    #     '//*[@id="result-form"]/fieldset/div[6]/table/tbody/tr[5]/td[7]/a'
+    # )  # 17:58 열차
     print("1순위 현재 상태 : {}".format(target1.text))
     target2 = nextXpath(
         '//*[@id="result-form"]/fieldset/div[6]/table/tbody/tr[6]/td[7]/a'
-    )  # 19:40 열차
+    )  # 19:05 열차
     print("2순위 현재 상태 : {}".format(target2.text))
 
     if target1.text == "예약하기":

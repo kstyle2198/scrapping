@@ -20,7 +20,7 @@ depart = "익산 "
 arrive = "용산"
 month = "8"
 date = "15"
-booking_time = "17"
+booking_time = "14"
 
 
 def nextXpath(path):
@@ -118,7 +118,7 @@ target2 = '//*[@id="tableResult"]/tbody/tr[2]/td[6]/a[1]/img'
 target3 = '//*[@id="tableResult"]/tbody/tr[3]/td[6]/a[1]/img'
 target4 = '//*[@id="tableResult"]/tbody/tr[4]/td[6]/a[1]/img'
 
-for i in range(1, 100):
+for i in range(1, 10):
     ## try & except로 순차적으로 100회 예약 시도
     print("{}차 시도".format(i))
     try:
