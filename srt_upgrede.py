@@ -14,6 +14,14 @@ from config import get_secret
 def nextXpath(path):
     return driver.find_element('xpath', path)
 
+def checkTime(t):
+    path = f'//*[@id="result-form"]/fieldset/div[6]/table/tbody/tr[{t}]/td[4]/em'
+    return driver.find_element('xpath', path)
+
+def booking(t):
+    path = f'//*[@id="result-form"]/fieldset/div[6]/table/tbody/tr[{t}]/td[7]/a/span'
+    return driver.find_element('xpath', path)
+
 def nextLinkText(path):
     return driver.find_element('link text', path)
 
@@ -26,7 +34,7 @@ time.sleep(1)
 
 ## 열차표 예매 조건 설정
 srt_id = get_secret("srt_id")
-pw = get_secret("pw")
+pw = get_secret("srt_pw")
 
 # 도시 선택 옵션 번호
 수서 = 'option[2]'
@@ -40,9 +48,10 @@ pw = get_secret("pw")
 울산 = 'option[12]'
 부산 = 'option[13]'
 
-date = "8"
-출발역 = 수서
-도착역 = 익산
+date = "13"
+booking_time = "20:19"
+출발역 = 익산
+도착역 = 수서
 
 ## SRT 홈피가서 로그인후 승차권 예매화면으로 이동
 url = 'https://etk.srail.kr/main.do'
@@ -119,50 +128,61 @@ driver.switch_to.window(driver.window_handles[0])  # 기본 창 선택 활성화
 
 nextXpath(
     '//*[@id="search-form"]/fieldset/a').click()  # 간편조회하기 버튼
-time.sleep(2)
+time.sleep(3)
 
+print("1페이지 서칭")
+for i in range(1,11):
+    try:
+        print(checkTime(i).text)
+        if checkTime(i).text == booking_time:
+            for a in range(1000):
+                target1 = booking(i)
+                if target1.text == "예약하기":
+                    target1.click()
+                    print("1순위 예약하였습니다. 시간 : {0}".format(datetime.datetime.now()))
+                    Slack_Msg("1순위 예약에 성공하였습니다. 시간 : {0}".format(datetime.datetime.now()))
+                    break
+                else:
+                    print("매진 상태입니다. 시간 : {0}".format(datetime.datetime.now()))
+                    # Slack_Msg("매진 상태입니다. 시간 : {0}".format(datetime.datetime.now()))
+                    print("리프레쉬")
+                    time.sleep(1)
+                    driver.refresh()
+                    print("=" * 20)
+    except:
+        pass
+    
+time.sleep(1)
 print("2페이지 이동")
-nextXpath('//*[@id="result-form"]/fieldset/div[8]/input'
-                             ).click()  #다음화면(2페이지) 이동하기(14시경 이후)
+nextXpath('//*[@id="result-form"]/fieldset/div[8]/input').click()                
+time.sleep(3)
 
-time.sleep(2)
+for i in range(1,11):
+    try:
+        
+        print(checkTime(i).text)
+        if checkTime(i).text == booking_time:
+            for a in range(1000):
+                target1 = booking(i)
+                print(target1.text)
+                if target1.text == "예약하기":
+                    target1.click()
+                    print("1순위 예약하였습니다. 시간 : {0}".format(datetime.datetime.now()))
+                    Slack_Msg("1순위 예약에 성공하였습니다. 시간 : {0}".format(datetime.datetime.now()))
+                    break
+                else:
+                    print("매진 상태입니다. 시간 : {0}".format(datetime.datetime.now()))
+                    # Slack_Msg("매진 상태입니다. 시간 : {0}".format(datetime.datetime.now()))
+                    print("리프레쉬")
+                    time.sleep(1)
+                    driver.refresh()
+                    print("=" * 20)
+    except:
+        pass
 
-print("예매 루프 실행")
-
-for i in range(1, 1000):
-    print("{}번째 예약 시도".format(i))
-    target1 = nextXpath(
-        '//*[@id="result-form"]/fieldset/div[6]/table/tbody/tr[1]/td[7]/a'
-    )  # 17:58 열차
-    # target1 = nextXpath(
-    #     '//*[@id="result-form"]/fieldset/div[6]/table/tbody/tr[5]/td[7]/a'
-    # )  # 17:58 열차
-    print("1순위 현재 상태 : {}".format(target1.text))
-    target2 = nextXpath(
-        '//*[@id="result-form"]/fieldset/div[6]/table/tbody/tr[6]/td[7]/a'
-    )  # 19:05 열차
-    print("2순위 현재 상태 : {}".format(target2.text))
-
-    if target1.text == "예약하기":
-        target1.click()
-        print("1순위 예약하였습니다. 시간 : {0}".format(datetime.datetime.now()))
-        Slack_Msg("1순위 예약에 성공하였습니다. 시간 : {0}".format(datetime.datetime.now()))
-        break
-    # elif target2.text == "예약하기":
-    #     target2.click()
-    #     print("2순위 예약하였습니다. 시간 : {0}".format(datetime.datetime.now()))
-    #     Slack_Msg("2순위 예약에 성공하였습니다. 시간 : {0}".format(datetime.datetime.now()))
-    #     break
-    else:
-        print("매진 상태입니다. 시간 : {0}".format(datetime.datetime.now()))
-        # Slack_Msg("매진 상태입니다. 시간 : {0}".format(datetime.datetime.now()))
-        print("리프레쉬 시작")
-        driver.refresh()
-        time.sleep(1)
-        print("리프레쉬 종료")
-        print("=" * 20)
-
+                    
 print("전체 작업 종료")
+
 
 ## 기타 참고
 # WebDriverWait(driver, 10).until(EC.presence_of_element_located(By.XPATH, "~~~")) # 기본 대기시간 설정하되, 로딩 완료시 바로 실행하는 코드
