@@ -36,6 +36,7 @@ time.sleep(1)
 srt_id = get_secret("srt_id")
 pw = get_secret("srt_pw")
 
+
 # 도시 선택 옵션 번호
 수서 = 'option[2]'
 천안아산 = 'option[5]'
@@ -48,10 +49,12 @@ pw = get_secret("srt_pw")
 울산 = 'option[12]'
 부산 = 'option[13]'
 
-date = "13"
-booking_time = "20:19"
+
+date = "20"
+booking_time = "17:58"
 출발역 = 익산
 도착역 = 수서
+
 
 ## SRT 홈피가서 로그인후 승차권 예매화면으로 이동
 url = 'https://etk.srail.kr/main.do'
