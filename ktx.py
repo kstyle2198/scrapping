@@ -18,9 +18,9 @@ ktx_id = get_secret("ktx_id")
 pw = get_secret("pw")
 depart = "익산 "
 arrive = "용산"
-month = "8"
-date = "15"
-booking_time = "14"
+month = "12"
+date = "18"
+booking_time = "17"
 
 
 def nextXpath(path):

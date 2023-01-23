@@ -39,9 +39,10 @@ pw = get_secret("srt_pw")
 
 # 도시 선택 옵션 번호
 수서 = 'option[2]'
+동탄 = 'option[3]'
 천안아산 = 'option[5]'
 오송 = 'option[6]'
-익산 = 'option[15]'
+익산 = 'option[15]'  
 목포 = 'option[19]'
 대전 = 'option[7]'
 동대구 = 'option[10]'
@@ -50,7 +51,7 @@ pw = get_secret("srt_pw")
 부산 = 'option[13]'
 
 
-date = "20"
+date = "24"
 booking_time = "17:58"
 출발역 = 익산
 도착역 = 수서
@@ -76,8 +77,6 @@ for i in range(pop_up - 1):
 time.sleep(1)
 driver.switch_to.window(driver.window_handles[0])  # 기본 창 선택 활성화
 nextXpath('//*[@id="wrap"]/div[3]/div[1]/div/a[2]').click()
-# driver.find_element("xpath",'//*[@id="wrap"]/div[3]/div[1]/div/a[2]').click()
-# nextMove('//*[@id="wrap"]/div[3]/div[1]/div/a[2]').click()
 time.sleep(1)
 
 # 로그인
@@ -123,7 +122,6 @@ time.sleep(1)
 driver.switch_to.frame('_LAYER_BODY_')  # Inner HTML Iframe 이동 (달력 창)
 time.sleep(1)
 nextLinkText(date).click()
-# driver.find_element_by_link_text(date).click()  # 예매 날짜 설정
 time.sleep(2)
 
 print("간편 조회버튼 클릭")
@@ -134,11 +132,11 @@ nextXpath(
 time.sleep(3)
 
 print("1페이지 서칭")
-for i in range(1,11):
+for i in range(1,100):
     try:
         print(checkTime(i).text)
         if checkTime(i).text == booking_time:
-            for a in range(1000):
+            for a in range(500):
                 target1 = booking(i)
                 if target1.text == "예약하기":
                     target1.click()
@@ -146,26 +144,26 @@ for i in range(1,11):
                     Slack_Msg("1순위 예약에 성공하였습니다. 시간 : {0}".format(datetime.datetime.now()))
                     break
                 else:
-                    print("매진 상태입니다. 시간 : {0}".format(datetime.datetime.now()))
+                    print(f"{a}번째 시도 - 매진 상태입니다. 시간 : {datetime.datetime.now()}")
                     # Slack_Msg("매진 상태입니다. 시간 : {0}".format(datetime.datetime.now()))
                     print("리프레쉬")
                     time.sleep(1)
                     driver.refresh()
                     print("=" * 20)
     except:
-        pass
+        break
     
 time.sleep(1)
 print("2페이지 이동")
 nextXpath('//*[@id="result-form"]/fieldset/div[8]/input').click()                
 time.sleep(3)
 
-for i in range(1,11):
+for i in range(1,100):
     try:
         
         print(checkTime(i).text)
         if checkTime(i).text == booking_time:
-            for a in range(1000):
+            for a in range(500):
                 target1 = booking(i)
                 print(target1.text)
                 if target1.text == "예약하기":
@@ -174,14 +172,14 @@ for i in range(1,11):
                     Slack_Msg("1순위 예약에 성공하였습니다. 시간 : {0}".format(datetime.datetime.now()))
                     break
                 else:
-                    print("매진 상태입니다. 시간 : {0}".format(datetime.datetime.now()))
+                    print(f"{a}번째 시도 - 매진 상태입니다. 시간 : {datetime.datetime.now()}")
                     # Slack_Msg("매진 상태입니다. 시간 : {0}".format(datetime.datetime.now()))
                     print("리프레쉬")
                     time.sleep(1)
                     driver.refresh()
                     print("=" * 20)
     except:
-        pass
+        break
 
                     
 print("전체 작업 종료")
