@@ -9,9 +9,17 @@ import time
 import datetime
 from slack import *
 from config import get_secret
+import random
 
+def web_wait(경로):
+    try:
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, 경로)))
+        WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, 경로)))
+    except:
+        print("에러")
 
 def nextXpath(path):
+    web_wait(path)
     return driver.find_element('xpath', path)
 
 def checkTime(t):
@@ -23,8 +31,8 @@ def booking(t):
     return driver.find_element('xpath', path)
 
 def nextLinkText(path):
+    web_wait(path)
     return driver.find_element('link text', path)
-
 
 print("SRT 예매 시도를 합니다.")
 driver = webdriver.Chrome(executable_path="./chromedriver/chromedriver.exe")
@@ -35,7 +43,6 @@ time.sleep(1)
 ## 열차표 예매 조건 설정
 srt_id = get_secret("srt_id")
 pw = get_secret("srt_pw")
-
 
 # 도시 선택 옵션 번호
 수서 = 'option[2]'
@@ -50,12 +57,10 @@ pw = get_secret("srt_pw")
 울산 = 'option[12]'
 부산 = 'option[13]'
 
-
-date = "24"
+date = "29"
 booking_time = "17:58"
-출발역 = 익산
+출발역 = 익산 
 도착역 = 수서
-
 
 ## SRT 홈피가서 로그인후 승차권 예매화면으로 이동
 url = 'https://etk.srail.kr/main.do'
@@ -68,16 +73,15 @@ pop_up = len(driver.window_handles)
 
 for i in range(pop_up - 1):
     print("{0}번째 팝업창 닫기".format(i + 1))
+    
     driver.switch_to.window(
         driver.window_handles[1])  # 팝업창 선택후 닫기 (팝업창의 개수는 변경될 수 있음)
     time.sleep(0.5)
     driver.close()
     time.sleep(0.5)
 
-time.sleep(1)
 driver.switch_to.window(driver.window_handles[0])  # 기본 창 선택 활성화
 nextXpath('//*[@id="wrap"]/div[3]/div[1]/div/a[2]').click()
-time.sleep(1)
 
 # 로그인
 print("로그인 시작")
@@ -88,7 +92,6 @@ nextXpath(
 nextXpath(
     '//*[@id="login-form"]/fieldset/div[1]/div[1]/div[2]/div/div[2]/input'
 ).click()
-time.sleep(1)
 print("로그인 종료후 팝업창 닫기")
 
 print("총 윈도우 개수 {0}".format(len(driver.window_handles)))
@@ -97,11 +100,8 @@ for i in range(pop_up2 - 1):
     print("{0}번째 팝업창 닫기".format(i + 1))
     driver.switch_to.window(
         driver.window_handles[1])  # 팝업창 선택후 닫기 (팝업창의 개수는 변경될 수 있음)
-    time.sleep(0.5)
     driver.close()
-    time.sleep(0.5)
 
-time.sleep(0.5)
 driver.switch_to.window(driver.window_handles[0])  # 기본 창 선택 활성화
 
 print("출발역과 도착역 선택")
@@ -120,16 +120,16 @@ nextXpath(
     '//*[@id="search-form"]/fieldset/div[3]/div/input[2]').click()  #달력버튼 클릭
 time.sleep(1)
 driver.switch_to.frame('_LAYER_BODY_')  # Inner HTML Iframe 이동 (달력 창)
-time.sleep(1)
+# time.sleep(1)
 nextLinkText(date).click()
-time.sleep(2)
+# time.sleep(2)
 
 print("간편 조회버튼 클릭")
 driver.switch_to.window(driver.window_handles[0])  # 기본 창 선택 활성화
 
 nextXpath(
     '//*[@id="search-form"]/fieldset/a').click()  # 간편조회하기 버튼
-time.sleep(3)
+# time.sleep(3)
 
 print("1페이지 서칭")
 for i in range(1,100):
@@ -150,12 +150,15 @@ for i in range(1,100):
                     time.sleep(1)
                     driver.refresh()
                     print("=" * 20)
+                    # random_interval = random.randint(1, 3)
+                    # time.sleep(random_interval)
+                    # print(f"반복 랜덤 인터벌 {random_interval}")
     except:
-        break
+        pass
     
 time.sleep(1)
 print("2페이지 이동")
-nextXpath('//*[@id="result-form"]/fieldset/div[8]/input').click()                
+nextXpath('//*[@id="result-form"]/fieldset/div[8]/input').click()                 
 time.sleep(3)
 
 for i in range(1,100):
@@ -178,14 +181,10 @@ for i in range(1,100):
                     time.sleep(1)
                     driver.refresh()
                     print("=" * 20)
+                    # random_interval = random.randint(1, 3)
+                    # time.sleep(random_interval)
+                    # print(f"반복 랜덤 인터벌 {random_interval}")
     except:
-        break
-
-                    
+        pass
+              
 print("전체 작업 종료")
-
-
-## 기타 참고
-# WebDriverWait(driver, 10).until(EC.presence_of_element_located(By.XPATH, "~~~")) # 기본 대기시간 설정하되, 로딩 완료시 바로 실행하는 코드
-# driver.execute_script("window.scrollTo(0, 1080)")  # 브라우저 높이인 1080 위치로 스크롤 내리기
-# driver.execute_script("window.scrollTo(0, document.body.scrollHeight)") # 화면 가장 아래로 스크롤 내리기

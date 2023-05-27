@@ -16,11 +16,11 @@ time.sleep(3)
 
 ktx_id = get_secret("ktx_id")
 pw = get_secret("pw")
-depart = "익산 "
-arrive = "용산"
-month = "12"
-date = "18"
-booking_time = "17"
+depart = "수원 "
+arrive = "군산"
+month = "4"
+date = "22"
+booking_time = "10"
 
 
 def nextXpath(path):
@@ -88,8 +88,8 @@ print("승차권 조회후 예약 시도")
 time.sleep(2)
 
 ## 예약 조건 입력
-nextXpath(
-    '//*[@id="selGoTrainRa00"]').click()  # 조회대상 열차 종류 KTX/SRT 온리
+# nextXpath(
+#     '//*[@id="selGoTrainRa00"]').click()  # 조회대상 열차 종류 KTX/SRT 온리
 nextXpath('//*[@id="start"]').send_keys(
     Keys.BACKSPACE)  # 서울 기본값 지우기
 nextXpath('//*[@id="start"]').send_keys(
@@ -103,11 +103,15 @@ nextXpath('//*[@id="get"]').send_keys(arrive)
 time.sleep(0.5)
 nextXpath('//*[@id="s_month"]').send_keys(month)
 time.sleep(0.5)
-nextXpath('//*[@id="s_day"]').send_keys(date)
+nextXpath('//*[@id="s_day"]').send_keys(date)  
 time.sleep(0.5)
 nextXpath('//*[@id="s_hour"]').send_keys(booking_time)
 time.sleep(0.5)
+
+exit()
 nextXpath('//*[@id="center"]/form/div/p/a/img').click()
+
+
 
 ## 조회후 열차 예매
 print("일반실 예약시도")
