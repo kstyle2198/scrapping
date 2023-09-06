@@ -47,18 +47,19 @@ pw = get_secret("srt_pw")
 # 도시 선택 옵션 번호
 수서 = 'option[2]'
 동탄 = 'option[3]'
-천안아산 = 'option[5]'
-오송 = 'option[6]'
-익산 = 'option[15]'  
-목포 = 'option[19]'
-대전 = 'option[7]'
-동대구 = 'option[10]'
-신경주 = 'option[11]'
-울산 = 'option[12]'
-부산 = 'option[13]'
+천안아산 = 'option[32]'
+오송 = 'option[23]'
+익산 = 'option[25]'  
+목포 = 'option[15]'
+대전 = 'option[12]'
+동대구 = 'option[13]'
+신경주 = 'option[20]'
+울산통도사 = 'option[24]'
+부산 = 'option[17]'
 
-date = "29"
-booking_time = "17:58"
+date = "10"
+booking_time = "17:59"
+
 출발역 = 익산 
 도착역 = 수서
 
@@ -145,14 +146,11 @@ for i in range(1,100):
                     break
                 else:
                     print(f"{a}번째 시도 - 매진 상태입니다. 시간 : {datetime.datetime.now()}")
-                    # Slack_Msg("매진 상태입니다. 시간 : {0}".format(datetime.datetime.now()))
                     print("리프레쉬")
                     time.sleep(1)
                     driver.refresh()
                     print("=" * 20)
-                    # random_interval = random.randint(1, 3)
-                    # time.sleep(random_interval)
-                    # print(f"반복 랜덤 인터벌 {random_interval}")
+
     except:
         pass
     
@@ -166,7 +164,7 @@ for i in range(1,100):
         
         print(checkTime(i).text)
         if checkTime(i).text == booking_time:
-            for a in range(500):
+            for a in range(500): 
                 target1 = booking(i)
                 print(target1.text)
                 if target1.text == "예약하기":
