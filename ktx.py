@@ -6,21 +6,24 @@ import time
 import datetime
 from slack import *
 from config import get_secret
+from selenium.webdriver.chrome.service import Service
+
 
 
 print("KTX 예매 시도를 합니다.")
-driver = webdriver.Chrome(executable_path="./chromedriver/chromedriver.exe")
-# driver.maximize_window()  # 창 최대화
+service_obj = Service("./chromedriver/chromedriver.exe")
+driver = webdriver.Chrome(service=service_obj)
+driver.maximize_window()  # 창 최대화
 time.sleep(3)
 ## 코레일 열차표 예매 조건 설정
 
 ktx_id = get_secret("ktx_id")
 pw = get_secret("pw")
-depart = "수원 "
-arrive = "군산"
-month = "4"
-date = "22"
-booking_time = "10"
+depart = "용산 "
+arrive = "익산"
+month = "8"
+date = "11"
+booking_time = "22"
 
 
 def nextXpath(path):
@@ -30,14 +33,15 @@ def nextLinkText(path):
     return driver.find_element('link text', path)
 
 ## 코레일 홈피가서 로그인후 승차권 예매화면으로 이동
-# url = 'http://www.letskorail.com/'
-url = "https://www.letskorail.com/index.jsp"
+url = 'https://www.letskorail.com/ebizprd/prdMain.do'
+# url = "https://www.letskorail.com/index.jsp"
 driver.get(url)
 time.sleep(2)
 
 # nextXpath('//*[@id="btnCommissionAgree"]').click()  # 추석명절용 임시팝업창 닫기
 # time.sleep(2)
 # nextXpath('//*[@id="container"]/div/div[2]/div[2]/a').click()
+
 
 # 팝업창 닫기
 print("총 윈도우 개수 {0}".format(len(driver.window_handles)))
@@ -87,9 +91,9 @@ time.sleep(1)
 print("승차권 조회후 예약 시도")
 time.sleep(2)
 
-## 예약 조건 입력
-# nextXpath(
-#     '//*[@id="selGoTrainRa00"]').click()  # 조회대상 열차 종류 KTX/SRT 온리
+# 예약 조건 입력
+nextXpath(
+    '//*[@id="selGoTrainRa00"]').click()  # 조회대상 열차 종류 KTX/SRT 온리
 nextXpath('//*[@id="start"]').send_keys(
     Keys.BACKSPACE)  # 서울 기본값 지우기
 nextXpath('//*[@id="start"]').send_keys(
@@ -108,7 +112,7 @@ time.sleep(0.5)
 nextXpath('//*[@id="s_hour"]').send_keys(booking_time)
 time.sleep(0.5)
 
-exit()
+# exit()
 nextXpath('//*[@id="center"]/form/div/p/a/img').click()
 
 
